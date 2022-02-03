@@ -1,0 +1,5 @@
+# download a file and name it
+Invoke-WebRequest "http://<ip>/<path/to/file.ext>" -OutFile "<path/to/file>"
+# query/start/stop a service
+sc qc/start/stop <service>
+

