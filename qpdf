@@ -1,0 +1,6 @@
+# separate pdf to pages
+qpdf --split-pages document.pdf
+
+# merge pdfs into one
+qpdf --empty --pages document1.pdf document2.pdf document3.pdf 1 -- final_document.pdf
+

@@ -1,0 +1,11 @@
+# LS_COLORS
+
+FOREGROUND		BACKGROUND		EFFECTS				256 COLOURS
+30 Black		40 On black		01 Bold				38;5;nnn Foreground
+31 Red			41 On red		04 Underline		48;5;nnn Background
+32 Green		42 On green
+33 Yellow		43 On yellow
+34 Blue			44 On blue
+35 Purple		45 On purple
+36 Cyan			46 On cyan
+37 White		47 On white

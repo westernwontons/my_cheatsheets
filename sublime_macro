@@ -1,0 +1,10 @@
+# macro key binding
+
+{
+    "keys": ["super+alt+l"],
+    "command": "run_macro_file",
+    "args": {
+        "file": "res://Packages/User/Example.sublime-macro"
+    }
+}
+
