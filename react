@@ -11,3 +11,137 @@ npm install bootstrap
 import "bootstrap/dist/css/bootstrap.css"
 ```
 
+# Multiple fetch requests with getServerSideProps
+```javascript
+export async function getServerSideProps() {
+  const [operationsRes, incidentsRes] = await Promise.all([
+    fetch(`${process.env.APP_DOMAIN}/api/${apiRoute}`), 
+    fetch(`${process.env.APP_DOMAIN}/api/${apiRoute2}`)
+  ]);
+  const [operations, incidents] = await Promise.all([
+    operationsRes.json(), 
+    incidentsRes.json()
+  ]);
+  return { props: { operations, incidents } };
+}
+```
+
+# React Hooks
+## useState
+- when data changes, re-render the UI
+- return a state variable and a setter
+
+## useEffect
+- componentDidMount, componentDidUpdate, componentWillUnmount in one
+- takes a function as it's first argument
+- will run it after dom is updated (when stateful data changes)
+- pass an array of dependencies
+	- empty array: 					no dependencies
+	- array with state variable: 	run only when state changes
+- return a function from useEffect to do cleanup
+- happens when component unmounts
+
+## useContext
+- used to share context between components
+- a context.provider scopes the context value
+- context.consumer consumes the value
+- consumer can access a context from many levels up or below
+- if context changes in nearest parent provider, it will change in children as well
+
+## useRef
+- create mutable object that remains the same between renders
+- grab native html elements from jsx
+- ex: ```javascript
+const myBtn = useRef(0);
+const clickIt = () => myBtn.current.click();
+return (
+	<button ref={myBtn}></button>
+);
+```
+- doesn't trigger a re-render
+
+## useReducer
+- a different way to manage state
+- instead of updating the state directly, `dispatch` actions
+- that `reducer` functions computes the next state
+```javascript
+function reducer(state, action) {
+	switch (action.type) {
+		case 'increment':
+			return state + 1;
+		case 'decrement':
+			return state - 1;
+		default:
+			throw new Error();
+	}
+}
+const [state, dispatch] = useReducer(reducer, 0); // 0 is initial state
+```
+
+## useMemo
+- optimise computation cost for improved performance
+- use with caution: **only as needed**
+- memoise a state
+- recompute only when hook dependencies change
+
+## useCallback
+- when a function is defined inside a component
+- a new function object is created each time the components is re-rendered
+- common use case: **passing down function to many children** (many list elements for example)
+- by wrapping the function in useCallback, we can prevent the unnecessary re-render
+	of children elements
+```javascript
+const showState = useCallback(() => {
+	alert(`State is ${state}`)
+}, [state])
+```
+
+## useImperativeHandle
+- when building a reusable component library and you need access
+- to the underlying dom element, and then forward it so that it
+- can be accessed by consumers of the component library
+- you can access a native dom elements using the `useRef` hook
+- you can wrap that `ref` in `forwardRef(ref: <FunctionComponent|ClassComponent>)`
+- to make it available for someone that uses that component
+- `useImperativeHandle` comes in if you want to change the behaviour of the exposed `ref`
+- modify exposed refs
+```javascript
+function App() {
+	const ref = useRef(null);
+
+	return <CoolButton ref={ref}></CoolButton>;
+}
+function CoolButton(props, ref) {
+	const myBtn = useRef(null);
+
+	useImperativeHandle(ref, () => ({
+		click: () => {
+			console.log("clicking button!");
+			myBtn.current.click();
+		},
+	}));
+}
+```
+
+## useLayoutEffect
+- runs after render but before painting to screen
+- caution: **blocks visual updates until your callback is finished**
+```javascript
+function App() {
+	const myBtn = useRef(null);
+
+	useLayoutEffect(() => {
+		const rect = myBtn.current.getBoundingClientRect();
+
+		console.log(box.height);
+	});
+	return (
+		<>
+			<button ref={ref}></button>
+		</>
+	);
+}
+```
+
+## useDebugValue
+- makes it possible to define own custom labels in react dev tools when building custom hooks
